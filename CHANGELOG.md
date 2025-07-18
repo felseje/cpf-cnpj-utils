@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and uses [Semantic Versioning](https://semver.org/).
 
+### [Unreleased]
+#### Chore
+- Move GPG signing to deploy phase to prevent CI failures
+
 ### [v1.0.0-alpha] - 2025-07-15
 #### Changed
 - Changed `pom`.
