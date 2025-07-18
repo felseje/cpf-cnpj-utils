@@ -8,6 +8,7 @@ and uses [Semantic Versioning](https://semver.org/).
 ### [Unreleased]
 #### Chore
 - Move GPG signing to deploy phase to prevent CI failures
+- Add CI workflow to run tests on main and PRs
 
 ### [v1.0.0-alpha] - 2025-07-15
 #### Changed
