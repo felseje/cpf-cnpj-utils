@@ -29,7 +29,7 @@ To use, add to your `pom.xml`:
 <dependency>
     <groupId>io.github.felseje</groupId>
     <artifactId>cpf-cnpj-utils</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.0-alpha</version>
 </dependency>
 ```
 
