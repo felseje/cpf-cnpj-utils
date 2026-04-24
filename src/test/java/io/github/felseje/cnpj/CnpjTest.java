@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @DisplayName("Cnpj class unit tests")
 class CnpjTest {
 
-    private static Stream<Arguments> validCnpjProvider() {
+    private static Stream<Arguments> getValidCnpjArguments() {
         return Stream.of(
                 Arguments.of("12.345.678/0001-95", "Formatted numeric format"),
                 Arguments.of("12345678000195", "Unformatted numeric format"),
@@ -24,19 +24,19 @@ class CnpjTest {
         );
     }
 
-    private static Stream<Arguments> invalidCnpjProvider() {
+    private static Stream<Arguments> getInvalidCnpjArguments() {
         return Stream.of(
-                Arguments.of(null, "Null CNPJ"),
-                Arguments.of("", "Empty CNPJ"),
-                Arguments.of("   ", "Blank CNPJ"),
-                Arguments.of("123", "Invalid length CNPJ"),
-                Arguments.of("12.345.678/0001-9X", "Invalid check digits CNPJ"),
+                Arguments.of(null, "Null value"),
+                Arguments.of("", "Empty value"),
+                Arguments.of("   ", "Blank value"),
+                Arguments.of("123", "CNPJ with invalid length"),
+                Arguments.of("12.345.678/0001-9X", "CNPJ with invalid check digits"),
                 Arguments.of("12!345!678/0001-95", "CNPJ with invalid characters")
         );
     }
 
     @ParameterizedTest(name = "{index} => input=''{0}'', description={1}")
-    @MethodSource("validCnpjProvider")
+    @MethodSource("getValidCnpjArguments")
     @DisplayName("Should create a non-null Cnpj instance")
     void shouldCreateNonNullCnpj(String raw, String description) {
         // Act
@@ -73,7 +73,7 @@ class CnpjTest {
     }
 
     @ParameterizedTest(name = "{index} => input=''{0}'', description={1}")
-    @MethodSource("validCnpjProvider")
+    @MethodSource("getValidCnpjArguments")
     @DisplayName("Should have normalized value length of 14 characters")
     void shouldHaveNormalizedValueLength14(String raw, String description) {
         // Arrange
@@ -87,7 +87,7 @@ class CnpjTest {
     }
 
     @ParameterizedTest(name = "{index} => input=''{0}'', description={1}")
-    @MethodSource("validCnpjProvider")
+    @MethodSource("getValidCnpjArguments")
     @DisplayName("Should have formatted value length of 18 characters")
     void shouldHaveFormattedValueLength18(String raw, String description) {
         // Arrange
@@ -101,7 +101,7 @@ class CnpjTest {
     }
 
     @ParameterizedTest(name = "{index} => input=''{0}'', description={1}")
-    @MethodSource("validCnpjProvider")
+    @MethodSource("getValidCnpjArguments")
     @DisplayName("getRoot should return non-null root segment")
     void getRootShouldReturnNonNull(String raw, String description) {
         // Arrange
@@ -115,7 +115,7 @@ class CnpjTest {
     }
 
     @ParameterizedTest(name = "{index} => input=''{0}'', description={1}")
-    @MethodSource("validCnpjProvider")
+    @MethodSource("getValidCnpjArguments")
     @DisplayName("getOrder should return non-null order segment")
     void getOrderShouldReturnNonNull(String raw, String description) {
         // Arrange
@@ -129,7 +129,7 @@ class CnpjTest {
     }
 
     @ParameterizedTest(name = "{index} => input=''{0}'', description={1}")
-    @MethodSource("validCnpjProvider")
+    @MethodSource("getValidCnpjArguments")
     @DisplayName("The method 'getCheckDigits()' should return non-null check digits segment")
     void getCheckDigitsShouldReturnNonNull(String raw, String description) {
         // Arrange
@@ -143,7 +143,7 @@ class CnpjTest {
     }
 
     @ParameterizedTest(name = "{index} => input=''{0}'', description={1}")
-    @MethodSource("invalidCnpjProvider")
+    @MethodSource("getInvalidCnpjArguments")
     @DisplayName("Should throw appropriate exception for invalid inputs")
     void shouldThrowForInvalidCnpj(String raw, String description) {
         // Arrange
@@ -241,7 +241,7 @@ class CnpjTest {
     }
 
     @ParameterizedTest(name = "{index} => input=''{0}'', description={1}")
-    @MethodSource("validCnpjProvider")
+    @MethodSource("getValidCnpjArguments")
     @DisplayName("The method 'getType()' should return correct CnpjType")
     void getTypeShouldReturnCorrectType(String raw, String description) {
         // Arrange

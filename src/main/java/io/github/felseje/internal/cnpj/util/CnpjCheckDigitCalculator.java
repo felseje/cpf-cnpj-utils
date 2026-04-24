@@ -25,8 +25,6 @@ import static io.github.felseje.internal.Constants.NOT_ALLOWED_INSTANTIATION_ERR
  */
 public final class CnpjCheckDigitCalculator {
 
-    private static final int[] WEIGHTS = new int[]{2, 3, 4, 5, 6, 7, 8, 9, 2, 3, 4, 5, 6};
-
     /**
      * Prevents instantiation of this utility class.
      *
@@ -43,16 +41,19 @@ public final class CnpjCheckDigitCalculator {
      * @return the calculated check digit as an integer (0–9)
      */
     private static int calculateCheckDigit(final char[] digits) {
-        final var calculationValueArray = new int[digits.length];
+        final int[] calculationValueArray = new int[digits.length];
         for (int i = 0; i < digits.length; i++) {
-            calculationValueArray[i] = digits[i] - 48; // convert ASCII to int
+            calculationValueArray[i] = digits[i] - '0'; // convert ASCII to int
         }
-        var sum = 0;
-        final var weightLength = digits.length - 1;
-        for (int i = 0; i < digits.length; i++) {
-            sum += (calculationValueArray[i] * WEIGHTS[weightLength - i]);
+
+        int sum = 0;
+        int weight = 2;
+        for (int i = digits.length - 1; i >= 0; i--) {
+            sum += calculationValueArray[i] * weight;
+            weight = (weight == 9) ? 2 : weight + 1;
         }
-        final var rest = sum % 11;
+
+        final int rest = sum % 11;
         return rest < 2 ? 0 : 11 - rest;
     }
 
@@ -65,18 +66,20 @@ public final class CnpjCheckDigitCalculator {
      * @throws IllegalArgumentException   if {@code type} is null
      * @throws InvalidCnpjBaseException   if {@code base} is null or its length is not 12
      */
-    public static char[] calculateCheckDigits(final char[] base, final CnpjType type)
-            throws IllegalArgumentException, InvalidCnpjBaseException {
+    public static char[] calculateCheckDigits(final char[] base, final CnpjType type) throws IllegalArgumentException, InvalidCnpjBaseException {
         if (type == null) {
             throw new IllegalArgumentException("The CNPJ type must be not null");
         }
+
         // TODO: Validate base character content according to the given type
         if (base == null || base.length != 12) {
             throw new InvalidCnpjBaseException("The CNPJ base must be valid");
         }
+
         final var primaryCheckDigit = Characters.digitToChar(calculateCheckDigit(base));
         final var baseWithPrimaryCheckDigit = Characters.appendChar(base, primaryCheckDigit);
         final var secondaryCheckDigit = Characters.digitToChar(calculateCheckDigit(baseWithPrimaryCheckDigit));
+
         return new char[]{primaryCheckDigit, secondaryCheckDigit};
     }
 

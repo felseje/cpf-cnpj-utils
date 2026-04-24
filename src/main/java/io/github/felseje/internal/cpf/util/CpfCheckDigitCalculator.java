@@ -28,7 +28,6 @@ import static io.github.felseje.internal.Constants.NOT_ALLOWED_INSTANTIATION_ERR
 public final class CpfCheckDigitCalculator {
 
     private static final Pattern WRONG_CPF_BASE = Pattern.compile("[^0-9]");
-    private static final int[] WEIGHTS = new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11};
 
     /**
      * Prevents instantiation of this utility class.
@@ -49,8 +48,8 @@ public final class CpfCheckDigitCalculator {
      */
     private static int calculateCheckDigit(final int[] digits) {
         int sum = 0;
-        for (int i = 0; i < digits.length; i++) {
-            sum += digits[i] * WEIGHTS[digits.length - i];
+        for (int index = 0, weight = digits.length + 1; index < digits.length; index++, weight--) {
+            sum += digits[index] * weight;
         }
         final int rest = sum % 11;
         return rest < 2 ? 0 : 11 - rest;
