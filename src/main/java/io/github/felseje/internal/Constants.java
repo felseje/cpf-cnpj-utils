@@ -15,23 +15,48 @@ package io.github.felseje.internal;
  */
 public final class Constants {
 
-    /**
-     * Generic error message used when instantiating a class that is not meant to be instantiated.
-     */
-    public static final String NOT_ALLOWED_INSTANTIATION_ERROR = "This class should not be instantiated";
+  /**
+   * Cpf normalized length constant.
+   */
+  public static final int CPF_LENGTH = 11;
 
-    /**
-     * Standard error message indicating a CNPJ input is {@code null} or blank.
-     */
-    public static final String NULL_OR_BLANK_ERROR = "The CNPJ must be not null or blank";
+  /**
+   * Cpf formatted length constant.
+   */
+  public static final int CPF_FORMATTED_LENGTH = 14;
 
-    /**
-     * Private constructor to prevent instantiation.
-     *
-     * @throws IllegalStateException always thrown to enforce non-instantiability.
-     */
-    private Constants() {
-        throw new IllegalStateException(NOT_ALLOWED_INSTANTIATION_ERROR);
-    }
+  /**
+   * Cnpj normalized length constant.
+   */
+  public static final int CNPJ_LENGTH = 14;
+
+  /**
+   * Cnpj formatted length constant.
+   */
+  public static final int CNPJ_FORMATTED_LENGTH = 18;
+
+  /**
+   * Generic error message used when instantiating a class that is not meant to be instantiated.
+   */
+  public static final String NOT_ALLOWED_INSTANTIATION_ERROR = "This class should not be instantiated";
+
+  /**
+   * Standard error message indicating a CNPJ input is {@code null} or {@code blank}.
+   */
+  public static final String NULL_OR_BLANK_CNPJ_ERROR = "CNPJ must not be null or blank";
+
+  /**
+   * Standard error message indicating a CNPJ does not match any valid pattern
+   */
+  public static final String UNRECOGNIZED_CNPJ_TYPE_ERROR = "CNPJ does not match any valid pattern";
+
+  /**
+   * Private constructor to prevent instantiation.
+   *
+   * @throws IllegalStateException always thrown to enforce non-instantiability.
+   */
+  private Constants() {
+    throw new IllegalStateException(NOT_ALLOWED_INSTANTIATION_ERROR);
+  }
 
 }

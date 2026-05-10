@@ -1,5 +1,6 @@
 /**
- * Core classes for CNPJ (Cadastro Nacional da Pessoa Jurídica) document validation and manipulation.
+ * Core classes for CNPJ (Cadastro Nacional da Pessoa Jurídica) document validation and
+ * manipulation.
  *
  * <p>Includes models and utility functions specifically designed for CNPJ operations.</p>
  *
