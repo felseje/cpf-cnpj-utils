@@ -43,6 +43,11 @@ public final class Constants {
   /**
    * Standard error message indicating a CNPJ input is {@code null} or {@code blank}.
    */
+  public static final String NULL_OR_BLANK_CPF_ERROR = "CPF must not be null or blank";
+
+  /**
+   * Standard error message indicating a CNPJ input is {@code null} or {@code blank}.
+   */
   public static final String NULL_OR_BLANK_CNPJ_ERROR = "CNPJ must not be null or blank";
 
   /**

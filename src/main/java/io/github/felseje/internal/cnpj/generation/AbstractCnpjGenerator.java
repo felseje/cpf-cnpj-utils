@@ -37,12 +37,15 @@ public abstract sealed class AbstractCnpjGenerator
    */
   protected char[] generateBase(final String acceptableCharacters) throws IllegalArgumentException {
     requireNotBlank(acceptableCharacters, "The 'acceptableCharacters' must not be null or blank");
+
     final int baseSize = CNPJ_LENGTH - 2;
     final var base = new char[baseSize];
     final var random = ThreadLocalRandom.current();
+
     for (int i = 0; i < baseSize; i++) {
       base[i] = acceptableCharacters.charAt(random.nextInt(acceptableCharacters.length()));
     }
+
     return base;
   }
 

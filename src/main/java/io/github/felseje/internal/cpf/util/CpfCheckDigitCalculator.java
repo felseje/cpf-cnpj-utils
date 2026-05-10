@@ -47,10 +47,13 @@ public final class CpfCheckDigitCalculator {
    */
   private static int calculateCheckDigit(final int[] digits) {
     int sum = 0;
+
     for (int index = 0, weight = digits.length + 1; index < digits.length; index++, weight--) {
       sum += digits[index] * weight;
     }
+
     final int rest = sum % 11;
+
     return rest < 2 ? 0 : 11 - rest;
   }
 
@@ -64,12 +67,13 @@ public final class CpfCheckDigitCalculator {
    */
   public static int[] calculateCheckDigits(int[] base) throws InvalidCpfBaseException {
     if (base == null || WRONG_CPF_BASE.matcher(Integers.toString(base)).matches()) {
-      throw new InvalidCpfBaseException("The CPF base informed is invalid");
+      throw new InvalidCpfBaseException("CPF base informed is invalid");
     }
 
     final var primaryCheckDigit = calculateCheckDigit(base);
     final var baseWithPrimaryCheckDigit = Integers.appendInt(base, primaryCheckDigit);
     final var secondaryCheckDigit = calculateCheckDigit(baseWithPrimaryCheckDigit);
+
     return new int[]{primaryCheckDigit, secondaryCheckDigit};
   }
 

@@ -1,7 +1,8 @@
 package io.github.felseje.internal.cpf.generation;
 
-import io.github.felseje.internal.core.Formatter;
-import io.github.felseje.internal.cpf.util.CpfCheckDigitCalculator;
+import static io.github.felseje.internal.Constants.CPF_LENGTH;
+import static io.github.felseje.internal.cpf.util.CpfCheckDigitCalculator.calculateCheckDigits;
+
 import io.github.felseje.internal.cpf.util.Integers;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -9,14 +10,13 @@ import java.util.concurrent.ThreadLocalRandom;
  * Generator class for creating valid CPF (Cadastro de Pessoas Físicas) numbers.
  * <p>
  * The generator creates a random 9-digit base, calculates the two check digits according to CPF
- * validation rules, and formats the resulting CPF using the provided {@link Formatter}.
+ * validation rules and return resulting CPF.
  * </p>
  *
  * <p>Example usage:
  * <pre>{@code
- *     Formatter formatter = new CpfFormatter(); // assume a formatter implementation
- *     CpfGenerator generator = new CpfGenerator(formatter);
- *     String cpf = generator.generate(); // e.g. "123.456.789-09"
+ *     CpfGenerator generator = new CpfGenerator();
+ *     String cpf = generator.generate(); // e.g. "12345678909"
  * }</pre>
  *
  * @author felseje
@@ -24,20 +24,10 @@ import java.util.concurrent.ThreadLocalRandom;
  */
 public final class CpfGenerator {
 
-  private static final int BASE_SIZE = 9;
-  private final Formatter formatter;
-
   /**
-   * Constructs a new {@code CpfGenerator} with the given formatter.
-   *
-   * @param formatter the formatter used to format the generated CPF; must not be {@code null}
-   * @throws IllegalArgumentException if the formatter is {@code null}
+   * Constructs a new {@code CpfGenerator}.
    */
-  public CpfGenerator(Formatter formatter) throws IllegalArgumentException {
-    if (formatter == null) {
-      throw new IllegalArgumentException("The formatter must not be null");
-    }
-    this.formatter = formatter;
+  public CpfGenerator() {
   }
 
   /**
@@ -46,11 +36,14 @@ public final class CpfGenerator {
    * @return an array of 9 random digits between 0 and 9
    */
   private int[] generateBase() {
-    final var base = new int[BASE_SIZE];
+    final int baseSize = CPF_LENGTH - 2;
+    final var base = new int[baseSize];
     final var random = ThreadLocalRandom.current();
-    for (int i = 0; i < BASE_SIZE; i++) {
+
+    for (int i = 0; i < baseSize; i++) {
       base[i] = random.nextInt(10);
     }
+
     return base;
   }
 
@@ -61,23 +54,9 @@ public final class CpfGenerator {
    */
   public String generate() {
     final var base = generateBase();
-    final var checkDigits = CpfCheckDigitCalculator.calculateCheckDigits(base);
-    return Integers.toString(base) + Integers.toString(checkDigits);
-  }
+    final var checkDigits = calculateCheckDigits(base);
 
-  /**
-   * Generates a valid CPF string, formatted or not.
-   *
-   * @param formatted whether the CPF should be returned formatted (###.###.###-##) or raw (only
-   *                  digits).
-   * @return a CPF string, formatted if requested.
-   */
-  public String generate(boolean formatted) {
-    final String normalized = generate();
-    if (formatted) {
-      return formatter.format(normalized);
-    }
-    return normalized;
+    return Integers.toString(base) + Integers.toString(checkDigits);
   }
 
 }

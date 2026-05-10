@@ -4,7 +4,6 @@ import static io.github.felseje.internal.Constants.NOT_ALLOWED_INSTANTIATION_ERR
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Objects;
 import java.util.regex.Pattern;
 
 /**
@@ -44,10 +43,16 @@ public final class Integers {
    * @param value the integer to append.
    * @return a new integer array containing all elements of {@code array}, followed by
    * {@code value}.
-   * @throws NullPointerException if {@code array} is {@code null}.
+   * @throws IllegalArgumentException if {@code array} is null.
    */
-  public static int[] appendInt(int[] array, int value) throws NullPointerException {
+  public static int[] appendInt(final int[] array, final int value)
+      throws IllegalArgumentException {
+    if (array == null) {
+      throw new IllegalArgumentException("Array must not be null");
+    }
+
     final var newArray = Arrays.copyOf(array, array.length + 1);
+
     newArray[array.length] = value;
     return newArray;
   }
@@ -58,16 +63,21 @@ public final class Integers {
    * Each element in the array is appended directly in sequence, without separators. For example, an
    * array {@code {1, 23, 4}} will be converted to {@code "1234"}.
    *
-   * @param intArray the array of integers to convert.
+   * @param array the array of integers to convert.
    * @return a {@code String} representation of the array with all elements concatenated in order.
    * @throws NullPointerException if {@code intArray} is {@code null}.
    */
-  public static String toString(int[] intArray) {
-    Objects.requireNonNull(intArray, "The integer array must not be null");
-    final var stringBuilder = new StringBuilder(intArray.length + 5);
-    for (int i : intArray) {
+  public static String toString(final int[] array) {
+    if (array == null) {
+      throw new IllegalArgumentException("Array must not be null");
+    }
+
+    final var stringBuilder = new StringBuilder(array.length + 5);
+
+    for (int i : array) {
       stringBuilder.append(i);
     }
+
     return stringBuilder.toString();
   }
 
@@ -84,7 +94,8 @@ public final class Integers {
   public static int charToDigit(char numericCharacter) {
     if (!Character.isDigit(numericCharacter)) {
       throw new IllegalArgumentException(
-          "Invalid character: '" + numericCharacter + "'. Expected a digit between 0 and 9.");
+          "Invalid character: '" + numericCharacter + "'. Expected a digit between 0 and 9."
+      );
     }
     return Character.digit(numericCharacter, 10);
   }
@@ -98,14 +109,20 @@ public final class Integers {
    * @throws IllegalArgumentException if the input contains any non-ASCII digit characters.
    */
   public static int[] toDigitArray(String input) {
-    Objects.requireNonNull(input, "The input string cannot be null");
-    if (NON_DECIMAL_DIGIT_PATTERN.matcher(input).find()) {
-      throw new IllegalArgumentException("The input string must contain only digits from 0 to 9");
+    if (input == null) {
+      throw new IllegalArgumentException("Input string cannot be null");
     }
+
+    if (NON_DECIMAL_DIGIT_PATTERN.matcher(input).find()) {
+      throw new IllegalArgumentException("Input string must contain only digits from 0 to 9");
+    }
+
     final var digits = new ArrayList<Integer>(input.length());
+
     for (char c : input.toCharArray()) {
       digits.add(charToDigit(c));
     }
+
     return digits.stream().mapToInt(Integer::intValue).toArray();
   }
 

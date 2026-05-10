@@ -1,30 +1,26 @@
 package io.github.felseje.internal.cpf.validation;
 
-import io.github.felseje.cpf.Cpf;
-import io.github.felseje.internal.core.Normalizer;
+import static io.github.felseje.internal.Constants.CPF_LENGTH;
+
 import io.github.felseje.internal.cpf.util.CpfCheckDigitCalculator;
 import io.github.felseje.internal.cpf.util.Integers;
 import io.github.felseje.internal.util.StringUtils;
 
 /**
- * Validates Brazilian CPF numbers by checking structure, formatting, and verifying digits.
+ * Utility class for validating Brazilian CPF (Cadastro de Pessoas Físicas) numbers.
  *
- * <p>This class uses a {@link Normalizer} to clean and normalize input strings,
- * ensuring consistent validation regardless of formatting (e.g., with or without separators).</p>
- *
- * <p>Validation checks include:
+ * <p>A CPF is considered valid if it meets all the following criteria:
  * <ul>
- *   <li>Non-null and non-blank input</li>
- *   <li>Correct length (11 digits)</li>
- *   <li>Not composed of the same repeated digit</li>
- *   <li>Correct check digits (verifiers)</li>
+ *   <li>Input is not null or blank</li>
+ *   <li>Contains exactly 11 numeric digits</li>
+ *   <li>Is not composed of a single repeated digit (e.g., "11111111111")</li>
+ *   <li>Has correct check digits, calculated according to the official CPF algorithm</li>
  * </ul>
  *
  * <p>Example usage:
  * <pre>{@code
- *     Normalizer normalizer = new CpfNormalizer();
- *     CpfValidator validator = new CpfValidator(normalizer);
- *     boolean valid = validator.isValid("123.456.789-09");
+ *     CpfValidator validator = new CpfValidator();
+ *     boolean valid = validator.isValid("123.456.789-09"); // true
  * }</pre>
  *
  * @author felseje
@@ -32,19 +28,10 @@ import io.github.felseje.internal.util.StringUtils;
  */
 public final class CpfValidator {
 
-  private final Normalizer normalizer;
-
   /**
-   * Constructs a {@code CpfValidator} with the given {@link Normalizer}.
-   *
-   * @param normalizer the normalizer to use for input preprocessing.
-   * @throws IllegalArgumentException if {@code normalizer} is {@code null}.
+   * Constructs a new instance of {@code CpfValidator}.
    */
-  public CpfValidator(Normalizer normalizer) throws IllegalArgumentException {
-    if (normalizer == null) {
-      throw new IllegalArgumentException("The normalizer must not be null");
-    }
-    this.normalizer = normalizer;
+  public CpfValidator() {
   }
 
   /**
@@ -61,19 +48,22 @@ public final class CpfValidator {
     if (StringUtils.isNullOrBlank(cpf)) {
       return false;
     }
-    final var cleaned = normalizer.clear(cpf);
-    if (cleaned.length() != Cpf.LENGTH) {
+
+    if (cpf.length() != 11) {
       return false;
     }
-    if (cleaned.chars().distinct().count() == 1) {
+
+    if (cpf.chars().distinct().count() == 1) {
       return false;
     }
-    final var baseDigits = Integers.toDigitArray(cleaned.substring(0, (Cpf.LENGTH - 2)));
-    final var calculatedCheckDigits = CpfCheckDigitCalculator.calculateCheckDigits(baseDigits);
-    final var actualFirstCheckDigit = Integers.charToDigit(cleaned.charAt(Cpf.LENGTH - 2));
-    final var actualSecondCheckDigit = Integers.charToDigit(cleaned.charAt(Cpf.LENGTH - 1));
-    return calculatedCheckDigits[0] == actualFirstCheckDigit
-        && calculatedCheckDigits[1] == actualSecondCheckDigit;
+
+    final int[] base = Integers.toDigitArray(cpf.substring(0, (CPF_LENGTH - 2)));
+    final int[] calculatedCheckDigits = CpfCheckDigitCalculator.calculateCheckDigits(base);
+    final int firstCheckDigit = Integers.charToDigit(cpf.charAt(CPF_LENGTH - 2));
+    final int secondCheckDigit = Integers.charToDigit(cpf.charAt(CPF_LENGTH - 1));
+
+    return calculatedCheckDigits[0] == firstCheckDigit
+        && calculatedCheckDigits[1] == secondCheckDigit;
   }
 
 }

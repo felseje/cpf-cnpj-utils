@@ -19,7 +19,7 @@ import static io.github.felseje.internal.Constants.NOT_ALLOWED_INSTANTIATION_ERR
  *         throw new IllegalArgumentException("Input must not be blank");
  *     }
  *
- *     StringUtils.requireNonBlank(value, "Value must be present");
+ *     StringUtils.requireNotBlank(value, "Value must be present");
  * }</pre>
  *
  * @author felseje
@@ -63,6 +63,7 @@ public final class StringUtils {
     if (isNullOrBlank(errorMessage)) {
       throw new IllegalArgumentException("errorMessage must not be null or blank");
     }
+
     if (isNullOrBlank(string)) {
       throw new IllegalArgumentException(errorMessage);
     }

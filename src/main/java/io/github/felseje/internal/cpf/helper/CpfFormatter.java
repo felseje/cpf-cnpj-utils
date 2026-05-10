@@ -1,7 +1,6 @@
 package io.github.felseje.internal.cpf.helper;
 
 import io.github.felseje.cpf.exception.InvalidCpfException;
-import io.github.felseje.internal.core.Formatter;
 import io.github.felseje.internal.core.Normalizer;
 
 /**
@@ -9,7 +8,7 @@ import io.github.felseje.internal.core.Normalizer;
  *
  * <p> This class formats a raw CPF string into the standard Brazilian CPF format:
  * <code>XXX.XXX.XXX-XX</code>. </p>
- * <p> It relies on the {@link CpfNormalizer} to normalize the input before formatting. </p>
+ * <p> It relies on the {@link Normalizer} to normalize the input before formatting. </p>
  * <p>
  * Example usage:
  * <pre>{@code
@@ -20,19 +19,20 @@ import io.github.felseje.internal.core.Normalizer;
  * @author felseje
  * @since 1.0.0-alpha
  */
-public class CpfFormatter implements Formatter {
+public class CpfFormatter {
 
-  private final Normalizer normalizer;
+  private final CpfNormalizer normalizer;
 
   /**
    * Creates a new instance of {@code CpfFormatter}.
    *
    * @throws IllegalArgumentException if the parameter normalizer is null.
    */
-  public CpfFormatter(Normalizer normalizer) throws IllegalArgumentException {
+  public CpfFormatter(CpfNormalizer normalizer) throws IllegalArgumentException {
     if (normalizer == null) {
       throw new IllegalArgumentException("The normalizer must not be null");
     }
+
     this.normalizer = normalizer;
   }
 
@@ -68,7 +68,6 @@ public class CpfFormatter implements Formatter {
    * @throws IllegalArgumentException if {@code input} is {@code null} or blank.
    * @throws InvalidCpfException      if the {@code input} cannot be normalized into a valid CPF.
    */
-  @Override
   public String format(String input) throws IllegalArgumentException, InvalidCpfException {
     return doFormat(normalizer.normalize(input));
   }
