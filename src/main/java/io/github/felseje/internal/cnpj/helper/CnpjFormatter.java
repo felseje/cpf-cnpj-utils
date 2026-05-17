@@ -1,11 +1,9 @@
 package io.github.felseje.internal.cnpj.helper;
 
+import static io.github.felseje.internal.Constants.CNPJ_LENGTH;
 import static io.github.felseje.internal.Constants.NOT_ALLOWED_INSTANTIATION_ERROR;
 import static io.github.felseje.internal.Constants.NULL_OR_BLANK_CNPJ_ERROR;
-import static io.github.felseje.internal.Constants.UNRECOGNIZED_CNPJ_TYPE_ERROR;
 
-import io.github.felseje.cnpj.CnpjType;
-import io.github.felseje.cnpj.exception.UnrecognizedCnpjTypeException;
 import io.github.felseje.internal.util.StringUtils;
 
 /**
@@ -32,35 +30,36 @@ public final class CnpjFormatter {
   /**
    * Prevents instantiation of this class.
    *
-   * @throws IllegalStateException always thrown to indicate this class should not be instantiated.
+   * @throws IllegalAccessException always thrown to indicate this class should not be
+   *                                instantiated.
    */
-  private CnpjFormatter() {
-    throw new IllegalStateException(NOT_ALLOWED_INSTANTIATION_ERROR);
+  private CnpjFormatter() throws IllegalAccessException {
+    throw new IllegalAccessException(NOT_ALLOWED_INSTANTIATION_ERROR);
   }
 
   /**
-   * Formats a normalized CNPJ string into the standard CNPJ pattern.
+   * Formats a normalized CNPJ string into the standard presentation pattern.
    *
-   * <p>This method assumes the input string is already normalized (i.e., contains
-   * only valid characters and has sufficient length). No validation or transformation is
-   * performed.</p>
+   * <p>This method applies only formatting rules and does not perform normalization
+   * or validation of CNPJ structure or check digits.</p>
+   *
+   * <p>The input must be a normalized 14-character CNPJ string.</p>
    *
    * <p>Examples:
    * <pre>{@code
-   *     format("12345678000195");   // returns "12.345.678/0001-95"
-   *     format("12ABC34501DE35");   // returns "12.ABC.345/01DE-35"
+   * format("12345678000195"); // "12.345.678/0001-95"
+   * format("12ABC34501DE35"); // "12.ABC.345/01DE-35"
    * }</pre>
    *
-   * @param input the normalized CNPJ string (numeric or alphanumeric)
-   * @return a formatted CNPJ string
-   * @throws IllegalArgumentException      if {@code input} is null or blank
-   * @throws UnrecognizedCnpjTypeException if the provided input does not match any CNPJ pattern
+   * @param input the normalized CNPJ string (exactly 14 characters)
+   * @return the formatted CNPJ in standard pattern
+   * @throws IllegalArgumentException if input is null, blank, or not exactly 14 characters long
    */
-  public static String format(String input) {
+  public static String format(final String input) throws IllegalArgumentException {
     StringUtils.requireNotBlank(input, NULL_OR_BLANK_CNPJ_ERROR);
 
-    if (CnpjType.detectFrom(input).isEmpty()) {
-      throw new UnrecognizedCnpjTypeException(UNRECOGNIZED_CNPJ_TYPE_ERROR);
+    if (input.length() != CNPJ_LENGTH) {
+      throw new IllegalArgumentException("CNPJ must be a normalized 14-character string");
     }
 
     //noinspection StringBufferReplaceableByString

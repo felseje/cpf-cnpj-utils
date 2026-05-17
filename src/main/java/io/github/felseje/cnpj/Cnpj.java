@@ -1,6 +1,7 @@
 package io.github.felseje.cnpj;
 
 import io.github.felseje.cnpj.exception.InvalidCnpjException;
+import io.github.felseje.cnpj.exception.UnrecognizedCnpjTypeException;
 import io.github.felseje.internal.cnpj.helper.CnpjClassifier;
 import io.github.felseje.internal.cnpj.helper.CnpjNormalizer;
 import io.github.felseje.internal.cnpj.validation.CnpjValidator;
@@ -34,7 +35,11 @@ public class Cnpj {
    */
   public Cnpj(String raw) throws IllegalArgumentException, InvalidCnpjException {
     String normalized = CnpjNormalizer.normalize(raw);
-    this.type = CnpjClassifier.classify(normalized);
+    try {
+      this.type = CnpjClassifier.classify(normalized);
+    } catch (UnrecognizedCnpjTypeException e) {
+      throw new InvalidCnpjException(e.getMessage(), e);
+    }
     CnpjValidator.validate(normalized, this.type);
     this.root = normalized.substring(0, 8);
     this.order = normalized.substring(8, 12);

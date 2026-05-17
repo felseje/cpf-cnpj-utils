@@ -1,70 +1,56 @@
 package io.github.felseje.internal.cpf.helper;
 
-import static io.github.felseje.internal.Constants.CPF_LENGTH;
-import static io.github.felseje.internal.Constants.NULL_OR_BLANK_CPF_ERROR;
+import static io.github.felseje.internal.Constants.NOT_ALLOWED_INSTANTIATION_ERROR;
 
-import io.github.felseje.cpf.exception.InvalidCpfException;
-import io.github.felseje.internal.util.StringUtils;
 import java.util.regex.Pattern;
 
 /**
- * Normalizer implementation for CPF (Cadastro de Pessoas Físicas) strings.
- * <p>
- * This class provides methods to clean raw CPF inputs, removing non-digit characters (such as dots,
- * dashes, and spaces) and ensuring the result contains exactly 11 digits.
- * </p>
+ * Utility class responsible for normalizing CPF (Cadastro de Pessoas Físicas) values.
  *
- * <p>Example usage:
- * <pre>{@code
- *     CpfNormalizer normalizer = new CpfNormalizer();
- *     String normalized = normalizer.normalize("123.456.789-09"); // returns "12345678909"
- * }</pre>
+ * <p>This class provides functionality to convert formatted CPF strings into a
+ * standardized numeric-only representation suitable for validation and processing.
  *
- * <p>This class does <strong>not</strong> validate CPF check digits or authenticity -
- * it only normalizes the input and verifies its length.</p>
+ * <p>Example transformations:
+ * <ul>
+ *   <li>"123.456.789-09" → "12345678909"</li>
+ *   <li>"123 456 789 09" → "12345678909"</li>
+ * </ul>
+ *
+ * <p>This class cannot be instantiated.
  *
  * @author felseje
  * @since 1.0.0-alpha
  */
-public class CpfNormalizer {
+public final class CpfNormalizer {
 
   private static final Pattern WRONG_CPF_DIGITS_PATTERN = Pattern.compile("[^0-9]");
 
   /**
-   * Constructs a new {@code CpfNormalizer}.
+   * Creates a new instance of {@code CpfFormatter}.
+   *
+   * @throws IllegalArgumentException if the parameter normalizer is null.
    */
-  public CpfNormalizer() {
+  private CpfNormalizer() throws IllegalAccessException {
+    throw new IllegalAccessException(NOT_ALLOWED_INSTANTIATION_ERROR);
   }
 
   /**
-   * Removes all non-digit characters from a given CPF string.
+   * Normalizes a CPF input by removing all non-digit characters.
    *
-   * @param input the CPF string to clean.
-   * @return a string containing only numeric digits.
-   * @throws IllegalArgumentException if the input is null or blank.
-   */
-  public String clear(String input) throws IllegalArgumentException {
-    StringUtils.requireNotBlank(input, NULL_OR_BLANK_CPF_ERROR);
-
-    return WRONG_CPF_DIGITS_PATTERN.matcher(input).replaceAll("");
-  }
-
-  /**
-   * Normalizes a raw CPF string by removing all non-digit characters and verifying its length.
+   * <p>This method is intended to convert formatted CPF values
+   * (e.g. "123.456.789-09") into a raw numeric representation (e.g. "12345678909") suitable for
+   * validation.
    *
-   * @param input the CPF string to normalize; may be formatted or unformatted.
-   * @return a normalized CPF string containing exactly 11 digits.
-   * @throws IllegalArgumentException if the input is null or blank.
-   * @throws InvalidCpfException      if the normalized CPF does not contain exactly 11 digits.
+   * @param input the CPF string to normalize, formatted or unformatted
+   * @return the normalized CPF containing only digits
+   * @throws IllegalArgumentException if the input is null
    */
-  public String normalize(String input) throws IllegalArgumentException, InvalidCpfException {
-    final String cleaned = clear(input);
-
-    if (cleaned.length() != CPF_LENGTH) {
-      throw new InvalidCpfException("CPF must be 11 characters long");
+  public static String normalize(String input) throws IllegalArgumentException {
+    if (input == null) {
+      throw new IllegalArgumentException("CPF must not be null");
     }
 
-    return cleaned;
+    return WRONG_CPF_DIGITS_PATTERN.matcher(input).replaceAll("");
   }
 
 }

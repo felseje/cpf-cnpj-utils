@@ -1,7 +1,11 @@
 package io.github.felseje.internal.cpf.helper;
 
-import io.github.felseje.cpf.exception.InvalidCpfException;
+import static io.github.felseje.internal.Constants.CPF_LENGTH;
+import static io.github.felseje.internal.Constants.NOT_ALLOWED_INSTANTIATION_ERROR;
+import static io.github.felseje.internal.Constants.NULL_OR_BLANK_CPF_ERROR;
+
 import io.github.felseje.internal.core.Normalizer;
+import io.github.felseje.internal.util.StringUtils;
 
 /**
  * Formatter implementation for formatting CPF (Cadastro de Pessoas Físicas) strings.
@@ -19,57 +23,40 @@ import io.github.felseje.internal.core.Normalizer;
  * @author felseje
  * @since 1.0.0-alpha
  */
-public class CpfFormatter {
-
-  private final CpfNormalizer normalizer;
+public final class CpfFormatter {
 
   /**
    * Creates a new instance of {@code CpfFormatter}.
    *
    * @throws IllegalArgumentException if the parameter normalizer is null.
    */
-  public CpfFormatter(CpfNormalizer normalizer) throws IllegalArgumentException {
-    if (normalizer == null) {
-      throw new IllegalArgumentException("The normalizer must not be null");
+  private CpfFormatter() throws IllegalAccessException {
+    throw new IllegalAccessException(NOT_ALLOWED_INSTANTIATION_ERROR);
+  }
+
+  /**
+   * Formats a normalized CPF (11 digits) into the pattern XXX.XXX.XXX-XX.
+   *
+   * <p>This method assumes the input is a normalized CPF containing exactly 11 digits.</p>
+   *
+   * @param input normalized CPF (must be 11 digits)
+   * @return formatted CPF string
+   * @throws IllegalArgumentException if the input is null, blank, or does not contain exactly 11
+   *                                  digits
+   */
+  public static String format(final String input) throws IllegalArgumentException {
+    StringUtils.requireNotBlank(input, NULL_OR_BLANK_CPF_ERROR);
+
+    if (input.length() != CPF_LENGTH) {
+      throw new IllegalArgumentException("CPF must be a normalized 11-digit string");
     }
 
-    this.normalizer = normalizer;
-  }
-
-  /**
-   * Performs the actual formatting of a normalized CPF string.
-   *
-   * @param value the normalized CPF string (expected to have 11 digits).
-   * @return the CPF formatted as <code>XXX.XXX.XXX-XX</code>.
-   */
-  private String doFormat(final String value) {
     return "%s.%s.%s-%s".formatted(
-        value.substring(0, 3),
-        value.substring(3, 6),
-        value.substring(6, 9),
-        value.substring(9)
+        input.substring(0, 3),
+        input.substring(3, 6),
+        input.substring(6, 9),
+        input.substring(9)
     );
-  }
-
-  /**
-   * Formats the given raw CPF string into the standard CPF pattern.
-   *
-   * <p> This method normalizes the input (removes invalid characters and validates length) before
-   * formatting it. </p>
-   * <p>
-   * Example of usage:
-   * <pre>{@code
-   *     CpfFormatter formatter = new CpfFormatter(new CpfNormalizer());
-   *     formatter.format("01234567890"); // returns "012.345.678-90"
-   * }</pre>
-   *
-   * @param input the raw CPF string to format; must not be {@code null} or blank.
-   * @return a formatted CPF string.
-   * @throws IllegalArgumentException if {@code input} is {@code null} or blank.
-   * @throws InvalidCpfException      if the {@code input} cannot be normalized into a valid CPF.
-   */
-  public String format(String input) throws IllegalArgumentException, InvalidCpfException {
-    return doFormat(normalizer.normalize(input));
   }
 
 }

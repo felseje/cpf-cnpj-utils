@@ -1,24 +1,31 @@
 package io.github.felseje.internal.cnpj.helper;
 
 import static io.github.felseje.internal.Constants.NOT_ALLOWED_INSTANTIATION_ERROR;
+import static io.github.felseje.internal.Constants.NULL_OR_BLANK_CNPJ_ERROR;
 
-import io.github.felseje.cnpj.exception.InvalidCnpjException;
-import io.github.felseje.internal.Constants;
 import io.github.felseje.internal.util.StringUtils;
 import java.util.regex.Pattern;
 
 /**
- * Normalizer implementation for processing CNPJ strings.
+ * Utility class responsible for normalizing CNPJ strings.
  *
- * <p> This class removes formatting symbols and standardizes CNPJ input into a 14-character
- * uppercase alphanumeric string, suitable for validation, classification, or storage. </p>
- * <p>
- * Examples:
+ * <p>This class removes all non-alphanumeric characters and converts the result
+ * to uppercase, producing a standardized representation suitable for validation, classification, or
+ * storage.</p>
+ *
+ * <p>Supported inputs include both formatted and unformatted CNPJ values, such as:
  * <ul>
- *   <li>Formatted numeric: {@code "12.345.678/0001-95"}</li>
- *   <li>Formatted alphanumeric: {@code "12.ABC.345/01DE-35"}</li>
- *   <li>Raw numeric: {@code "12345678000195"}</li>
- *   <li>Raw alphanumeric: {@code "12abc34501de35"}</li>
+ *   <li>{@code "12.345.678/0001-95"} (formatted numeric)</li>
+ *   <li>{@code "12.ABC.345/01DE-35"} (formatted alphanumeric)</li>
+ *   <li>{@code "12345678000195"} (raw numeric)</li>
+ *   <li>{@code "12abc34501de35"} (raw alphanumeric)</li>
+ * </ul>
+ *
+ * <p>The normalization process is purely syntactic and does not perform:
+ * <ul>
+ *   <li>validation of check digits (DVs)</li>
+ *   <li>length validation</li>
+ *   <li>business rule enforcement</li>
  * </ul>
  *
  * @author felseje
@@ -34,55 +41,36 @@ public final class CnpjNormalizer {
   /**
    * Prevents instantiation of this class.
    *
-   * @throws IllegalStateException always thrown to indicate this class should not be instantiated.
+   * @throws IllegalAccessException always thrown to indicate this class should not be
+   *                                instantiated.
    */
-  private CnpjNormalizer() {
-    throw new IllegalStateException(NOT_ALLOWED_INSTANTIATION_ERROR);
+  private CnpjNormalizer() throws IllegalAccessException {
+    throw new IllegalAccessException(NOT_ALLOWED_INSTANTIATION_ERROR);
   }
 
   /**
-   * Removes all non-alphanumeric characters from the input CNPJ string.
+   * Normalizes a raw CNPJ string by removing formatting characters and converting it to uppercase.
    *
-   * <p>This method keeps only letters and digits, removing formatting characters
-   * such as dots, slashes, dashes, and whitespace.</p>
+   * <p>The result contains only alphanumeric characters (digits and uppercase letters).
+   * No structural or semantic validation is performed.</p>
    *
-   * @param rawCnpj the CNPJ string to sanitize; must not be null or blank
-   * @return a string containing only alphanumeric characters
-   * @throws IllegalArgumentException if the input is null or blank
-   */
-  public static String sanitize(String rawCnpj) throws IllegalArgumentException {
-    StringUtils.requireNotBlank(rawCnpj, Constants.NULL_OR_BLANK_CNPJ_ERROR);
-
-    return INVALID_CNPJ_CHARACTERS.matcher(rawCnpj).replaceAll("");
-  }
-
-  /**
-   * Normalizes a raw CNPJ string by removing formatting symbols and converting it to uppercase.
+   * <p>This method does not validate check digits (DVs) or enforce length constraints,
+   * only performs syntactic normalization.</p>
    *
-   * <p> The result will always be a 14-character string composed of digits and/or uppercase
-   * letters. </p>
-   * <p> This method does not validate the check digits (DVs), only the structure and length. </p>
-   * <p>
-   * Examples:
+   * <p>Examples:
    * <pre>{@code
    * normalize("12.345.678/0001-95"); // "12345678000195"
    * normalize("12.abc.345/01de-35"); // "12ABC34501DE35"
    * }</pre>
    *
-   * @param rawCnpj the raw CNPJ string, formatted or unformatted
+   * @param input the raw CNPJ string, formatted or unformatted
    * @return the normalized CNPJ string
    * @throws IllegalArgumentException if the input is null or blank
-   * @throws InvalidCnpjException     if the normalized value does not have exactly 14 characters
    */
-  public static String normalize(String rawCnpj)
-      throws IllegalArgumentException, InvalidCnpjException {
-    final String sanitized = sanitize(rawCnpj).toUpperCase();
+  public static String normalize(final String input) throws IllegalArgumentException {
+    StringUtils.requireNotBlank(input, NULL_OR_BLANK_CNPJ_ERROR);
 
-    if (sanitized.length() != Constants.CNPJ_LENGTH) {
-      throw new InvalidCnpjException("CNPJ must be 14 characters long");
-    }
-
-    return sanitized;
+    return INVALID_CNPJ_CHARACTERS.matcher(input).replaceAll("").toUpperCase();
   }
 
 }

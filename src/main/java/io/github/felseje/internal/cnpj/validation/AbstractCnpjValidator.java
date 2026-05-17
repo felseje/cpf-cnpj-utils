@@ -49,11 +49,11 @@ public abstract sealed class AbstractCnpjValidator
       final BiFunction<char[], CnpjType, char[]> checkDigitsCalculator
   ) throws IllegalArgumentException {
     if (type == null) {
-      throw new IllegalArgumentException("type cannot be null");
+      throw new IllegalArgumentException("CNPJ type cannot be null");
     }
 
     if (checkDigitsCalculator == null) {
-      throw new IllegalArgumentException("checkDigitsCalculator cannot be null");
+      throw new IllegalArgumentException("CNPJ checkDigitsCalculator method cannot be null");
     }
 
     if (StringUtils.isNullOrBlank(sanitized)) {

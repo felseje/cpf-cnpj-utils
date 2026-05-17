@@ -1,15 +1,23 @@
 package io.github.felseje.cpf;
 
 import io.github.felseje.cpf.exception.InvalidCpfException;
+import io.github.felseje.internal.cpf.helper.CpfFormatter;
+import io.github.felseje.internal.cpf.helper.CpfNormalizer;
+import io.github.felseje.internal.cpf.validation.CpfValidator;
 import java.util.Objects;
 
 /**
- * Represents a CPF (Cadastro de Pessoas Físicas), which is the Brazilian national registry of
- * people.
+ * Immutable value object representing a CPF (Cadastro de Pessoas Físicas), the Brazilian taxpayer
+ * identification number.
  *
- * <p> This class is responsible for storing, validating, and formatting CPF numbers. </p>
- * <p> A valid CPF consists of 11 digits and may be represented in formatted (e.g.,
- * "012.345.678-90") or unformatted form (e.g., "01234567890"). </p>
+ * <p>This class encapsulates a validated CPF and provides structured access
+ * to its components (base and check digits) as well as formatted output.</p>
+ *
+ * <p>Input values are normalized and validated upon construction. Only valid
+ * CPF values are allowed to be instantiated.</p>
+ *
+ * <p>A CPF consists of 11 digits, typically represented in formatted form
+ * (e.g. "012.345.678-90") or unformatted form (e.g. "01234567890").</p>
  *
  * @author felseje
  * @since 1.0.0-alpha
@@ -20,15 +28,15 @@ public class Cpf {
   private final String checkDigits;
 
   /**
-   * Build an instance of the {@link Cpf} using a string representation.
+   * Creates a CPF instance from a raw input string.
    *
-   * @param raw the raw CPF string.
-   * @throws IllegalArgumentException if the {@code raw} is null or blank.
-   * @throws InvalidCpfException      if the {@code raw} is not a valid CPF.
+   * @param raw the CPF value, formatted or unformatted
+   * @throws IllegalArgumentException if the input is null or blank
+   * @throws InvalidCpfException      if the CPF is not valid
    */
-  public Cpf(String raw) throws IllegalArgumentException, InvalidCpfException {
-    CpfUtils.validate(raw);
-    String normalized = CpfUtils.normalize(raw);
+  public Cpf(final String raw) throws IllegalArgumentException, InvalidCpfException {
+    final String normalized = CpfNormalizer.normalize(raw);
+    CpfValidator.validate(normalized);
     this.base = normalized.substring(0, 9);
     this.checkDigits = normalized.substring(9);
   }
@@ -53,38 +61,29 @@ public class Cpf {
    *
    * <p>Example:</p>
    * <pre>{@code
-   * Cpf cpf = new Cpf("01234567890");
+   * Cpf cpf = new Cpf("012.345.678-90");
    * System.out.println(cpf.getCheckDigits()); // prints "90"
    * }</pre>
    *
-   * @return the CNPJ check digits.
+   * @return the CPF check digits.
    */
   public String getCheckDigits() {
     return checkDigits;
   }
 
   /**
-   * Returns the full normalized CPF string (11 characters).
+   * Returns the normalized CPF value (11 digits).
    *
-   * <p>Example:</p>
-   * <pre>{@code
-   * Cpf cpf = new Cpf("012.345.678-90");
-   * System.out.println(cpf.getValue()); // prints "01234567890"
-   * }</pre>
-   *
-   * @return the normalized CNPJ value.
+   * @return the CPF in normalized form
    */
   public String getValue() {
     return base + checkDigits;
   }
 
   /**
-   * Returns a hash code value for this CPF.
+   * Returns a hash code based on CPF structural components (base and check digits).
    *
-   * <p> The hash code is computed based on the {@code value} field. </p>
-   * <p> This ensures consistency with the {@link #equals(Object)} method. </p>
-   *
-   * @return the hash code value for this CPF.
+   * @return hash code value
    */
   @Override
   public int hashCode() {
@@ -95,13 +94,12 @@ public class Cpf {
   }
 
   /**
-   * Indicates whether some other object is "equal to" this one.
+   * Indicates whether another object is equal to this CPF.
    *
-   * <p> Two {@link Cpf} instances are considered equal if they have the same normalized
-   * {@code value}. </p>
+   * <p>Equality is based on the CPF structural components (base and check digits).</p>
    *
-   * @param object the object to compare with.
-   * @return {@code true} if this object is equal to the given object; {@code false} otherwise.
+   * @param object the object to compare
+   * @return true if equal, false otherwise
    */
   @Override
   public boolean equals(Object object) {
@@ -119,7 +117,7 @@ public class Cpf {
    */
   @Override
   public String toString() {
-    return CpfUtils.format(getValue());
+    return CpfFormatter.format(getValue());
   }
 
 }
