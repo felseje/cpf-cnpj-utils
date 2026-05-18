@@ -28,12 +28,13 @@ public final class Integers {
   private static final Pattern NON_DECIMAL_DIGIT_PATTERN = Pattern.compile("[^0-9]");
 
   /**
-   * Prevents instantiation of this utility class.
+   * Prevents instantiation of this class.
    *
-   * @throws IllegalStateException always thrown to indicate this class should not be instantiated
+   * @throws UnsupportedOperationException always thrown to indicate this class should not be
+   *                                       instantiated.
    */
   private Integers() {
-    throw new IllegalStateException(NOT_ALLOWED_INSTANTIATION_ERROR);
+    throw new UnsupportedOperationException(NOT_ALLOWED_INSTANTIATION_ERROR);
   }
 
   /**
@@ -91,7 +92,7 @@ public final class Integers {
    * @return the integer value of the character
    * @throws IllegalArgumentException if the character is not a valid digit (0-9)
    */
-  public static int charToDigit(char numericCharacter) {
+  public static int charToDigit(final char numericCharacter) {
     if (!Character.isDigit(numericCharacter)) {
       throw new IllegalArgumentException(
           "Invalid character: '" + numericCharacter + "'. Expected a digit between 0 and 9."
@@ -105,10 +106,10 @@ public final class Integers {
    *
    * @param input the string to convert.
    * @return an array of integers representing each digit.
-   * @throws NullPointerException     if the input is {@code null}.
+   * @throws IllegalArgumentException if the input is {@code null}.
    * @throws IllegalArgumentException if the input contains any non-ASCII digit characters.
    */
-  public static int[] toDigitArray(String input) {
+  public static int[] toDigitArray(final String input) {
     if (input == null) {
       throw new IllegalArgumentException("Input string cannot be null");
     }

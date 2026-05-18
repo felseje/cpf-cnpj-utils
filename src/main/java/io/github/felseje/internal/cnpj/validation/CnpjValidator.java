@@ -2,6 +2,7 @@ package io.github.felseje.internal.cnpj.validation;
 
 import static io.github.felseje.internal.Constants.NOT_ALLOWED_INSTANTIATION_ERROR;
 import static io.github.felseje.internal.Constants.NULL_OR_BLANK_CNPJ_ERROR;
+import static io.github.felseje.internal.util.StringUtils.requireNotBlank;
 
 import io.github.felseje.cnpj.CnpjType;
 import io.github.felseje.cnpj.exception.InvalidCnpjException;
@@ -42,11 +43,11 @@ public final class CnpjValidator {
   /**
    * Prevents instantiation of this class.
    *
-   * @throws IllegalAccessException always thrown to indicate this class should not be
-   *                                instantiated.
+   * @throws UnsupportedOperationException always thrown to indicate this class should not be
+   *                                       instantiated.
    */
-  private CnpjValidator() throws IllegalAccessException {
-    throw new IllegalAccessException(NOT_ALLOWED_INSTANTIATION_ERROR);
+  private CnpjValidator() {
+    throw new UnsupportedOperationException(NOT_ALLOWED_INSTANTIATION_ERROR);
   }
 
   /**
@@ -58,7 +59,7 @@ public final class CnpjValidator {
    * @param validator the validation rule to apply
    * @throws InvalidCnpjException if the CNPJ is not valid according to the provided validator
    */
-  private static void validate(String cnpj, Predicate<String> validator)
+  private static void validate(final String cnpj, final Predicate<String> validator)
       throws InvalidCnpjException {
     if (!validator.test(cnpj)) {
       throw new InvalidCnpjException("CNPJ is not valid");
@@ -77,27 +78,27 @@ public final class CnpjValidator {
    * <p>The provided CNPJ must be normalized and must not contain
    * formatting characters such as dots, slashes, or hyphens.
    *
-   * @param normalizedCnpj the normalized CNPJ to validate
-   * @param type           the CNPJ type that determines the validation strategy
+   * @param cnpj the normalized CNPJ to validate
+   * @param type the CNPJ type that determines the validation strategy
    * @throws IllegalArgumentException if the CNPJ is null, blank, the type is null, or the type is
    *                                  unsupported
    * @throws InvalidCnpjException     if the CNPJ is invalid according to the specified validation
    *                                  strategy
    */
-  public static void validate(String normalizedCnpj, CnpjType type)
+  public static void validate(final String cnpj, final CnpjType type)
       throws IllegalArgumentException, InvalidCnpjException {
     if (type == null) {
       throw new IllegalArgumentException("CNPJ type cannot be null");
     }
 
-    StringUtils.requireNotBlank(normalizedCnpj, NULL_OR_BLANK_CNPJ_ERROR);
+    requireNotBlank(cnpj, NULL_OR_BLANK_CNPJ_ERROR);
 
     switch (type) {
       case NUMERIC:
-        validate(normalizedCnpj, NumericCnpjValidator::isValid);
+        validate(cnpj, NumericCnpjValidator::isValid);
         break;
       case ALPHANUMERIC:
-        validate(normalizedCnpj, AlphanumericCnpjValidator::isValid);
+        validate(cnpj, AlphanumericCnpjValidator::isValid);
         break;
       default:
         throw new IllegalArgumentException("Unsupported CNPJ type: " + type);

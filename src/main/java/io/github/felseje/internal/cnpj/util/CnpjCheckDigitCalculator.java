@@ -28,12 +28,13 @@ import io.github.felseje.cnpj.exception.InvalidCnpjBaseException;
 public final class CnpjCheckDigitCalculator {
 
   /**
-   * Prevents instantiation of this utility class.
+   * Prevents instantiation of this class.
    *
-   * @throws IllegalStateException always thrown to indicate this class should not be instantiated.
+   * @throws UnsupportedOperationException always thrown to indicate this class should not be
+   *                                       instantiated.
    */
   private CnpjCheckDigitCalculator() {
-    throw new IllegalStateException(NOT_ALLOWED_INSTANTIATION_ERROR);
+    throw new UnsupportedOperationException(NOT_ALLOWED_INSTANTIATION_ERROR);
   }
 
   /**

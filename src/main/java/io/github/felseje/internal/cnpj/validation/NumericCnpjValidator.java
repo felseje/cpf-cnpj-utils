@@ -1,6 +1,7 @@
 package io.github.felseje.internal.cnpj.validation;
 
 import static io.github.felseje.cnpj.CnpjType.NUMERIC;
+import static io.github.felseje.internal.Constants.NOT_ALLOWED_INSTANTIATION_ERROR;
 
 import io.github.felseje.internal.cnpj.util.CnpjCheckDigitCalculator;
 
@@ -22,6 +23,16 @@ import io.github.felseje.internal.cnpj.util.CnpjCheckDigitCalculator;
 public final class NumericCnpjValidator extends AbstractCnpjValidator {
 
   /**
+   * Prevents instantiation of this class.
+   *
+   * @throws UnsupportedOperationException always thrown to indicate this class should not be
+   *                                       instantiated.
+   */
+  private NumericCnpjValidator() {
+    throw new UnsupportedOperationException(NOT_ALLOWED_INSTANTIATION_ERROR);
+  }
+
+  /**
    * Validates the given CNPJ string as a numeric CNPJ.
    *
    * <p>The input may be formatted or unformatted. It will be normalized before validation.</p>
@@ -30,7 +41,7 @@ public final class NumericCnpjValidator extends AbstractCnpjValidator {
    * @return {@code true} if the CNPJ is structurally valid and has correct check digits;
    * {@code false} otherwise
    */
-  public static boolean isValid(String sanitized) {
+  public static boolean isValid(final String sanitized) {
     return AbstractCnpjValidator.isValid(
         sanitized,
         NUMERIC,

@@ -11,7 +11,6 @@ import io.github.felseje.internal.cnpj.helper.CnpjFormatter;
 import io.github.felseje.internal.cnpj.helper.CnpjNormalizer;
 import io.github.felseje.internal.cnpj.validation.AlphanumericCnpjValidator;
 import io.github.felseje.internal.cnpj.validation.NumericCnpjValidator;
-import io.github.felseje.internal.core.Normalizer;
 import io.github.felseje.internal.util.StringUtils;
 
 /**

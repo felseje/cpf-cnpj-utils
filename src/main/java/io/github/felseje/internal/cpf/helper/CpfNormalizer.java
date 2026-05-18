@@ -26,12 +26,13 @@ public final class CpfNormalizer {
   private static final Pattern WRONG_CPF_DIGITS_PATTERN = Pattern.compile("[^0-9]");
 
   /**
-   * Creates a new instance of {@code CpfFormatter}.
+   * Prevents instantiation of this class.
    *
-   * @throws IllegalArgumentException if the parameter normalizer is null.
+   * @throws UnsupportedOperationException always thrown to indicate this class should not be
+   *                                       instantiated.
    */
-  private CpfNormalizer() throws IllegalAccessException {
-    throw new IllegalAccessException(NOT_ALLOWED_INSTANTIATION_ERROR);
+  private CpfNormalizer() {
+    throw new UnsupportedOperationException(NOT_ALLOWED_INSTANTIATION_ERROR);
   }
 
   /**
@@ -45,7 +46,7 @@ public final class CpfNormalizer {
    * @return the normalized CPF containing only digits
    * @throws IllegalArgumentException if the input is null
    */
-  public static String normalize(String input) throws IllegalArgumentException {
+  public static String normalize(final String input) throws IllegalArgumentException {
     if (input == null) {
       throw new IllegalArgumentException("CPF must not be null");
     }

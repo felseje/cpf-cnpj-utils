@@ -30,11 +30,11 @@ public final class CnpjFormatter {
   /**
    * Prevents instantiation of this class.
    *
-   * @throws IllegalAccessException always thrown to indicate this class should not be
-   *                                instantiated.
+   * @throws UnsupportedOperationException always thrown to indicate this class should not be
+   *                                       instantiated.
    */
-  private CnpjFormatter() throws IllegalAccessException {
-    throw new IllegalAccessException(NOT_ALLOWED_INSTANTIATION_ERROR);
+  private CnpjFormatter() {
+    throw new UnsupportedOperationException(NOT_ALLOWED_INSTANTIATION_ERROR);
   }
 
   /**

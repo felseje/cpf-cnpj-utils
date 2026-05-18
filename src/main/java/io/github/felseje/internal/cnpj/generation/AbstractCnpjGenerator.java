@@ -1,6 +1,7 @@
 package io.github.felseje.internal.cnpj.generation;
 
 import static io.github.felseje.internal.Constants.CNPJ_LENGTH;
+import static io.github.felseje.internal.Constants.NOT_ALLOWED_INSTANTIATION_ERROR;
 import static io.github.felseje.internal.util.StringUtils.requireNotBlank;
 
 import java.util.concurrent.ThreadLocalRandom;
@@ -22,9 +23,13 @@ public abstract sealed class AbstractCnpjGenerator
     permits AlphanumericCnpjGenerator, NumericCnpjGenerator {
 
   /**
-   * Protected constructor to prevent direct instantiation.
+   * Prevents instantiation of this class.
+   *
+   * @throws UnsupportedOperationException always thrown to indicate this class should not be
+   *                                       instantiated.
    */
   protected AbstractCnpjGenerator() {
+    throw new UnsupportedOperationException(NOT_ALLOWED_INSTANTIATION_ERROR);
   }
 
   /**
@@ -35,7 +40,8 @@ public abstract sealed class AbstractCnpjGenerator
    * @return a character array representing the generated CNPJ base.
    * @throws IllegalArgumentException if {@code acceptableCharacters} is null or blank.
    */
-  protected char[] generateBase(final String acceptableCharacters) throws IllegalArgumentException {
+  protected static char[] generateBase(final String acceptableCharacters)
+      throws IllegalArgumentException {
     requireNotBlank(acceptableCharacters, "The 'acceptableCharacters' must not be null or blank");
 
     final int baseSize = CNPJ_LENGTH - 2;

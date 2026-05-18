@@ -15,12 +15,13 @@ import java.util.Arrays;
 public final class Characters {
 
   /**
-   * Prevents instantiation of this utility class.
+   * Prevents instantiation of this class.
    *
-   * @throws IllegalStateException always thrown to indicate this class should not be instantiated.
+   * @throws UnsupportedOperationException always thrown to indicate this class should not be
+   *                                       instantiated.
    */
   private Characters() {
-    throw new IllegalStateException(NOT_ALLOWED_INSTANTIATION_ERROR);
+    throw new UnsupportedOperationException(NOT_ALLOWED_INSTANTIATION_ERROR);
   }
 
   /**
@@ -30,7 +31,7 @@ public final class Characters {
    * @return the character representing the digit.
    * @throws IllegalArgumentException if {@code digit} is not between 0 and 9.
    */
-  public static char digitToChar(int digit) throws IllegalArgumentException {
+  public static char digitToChar(final int digit) throws IllegalArgumentException {
     if (digit < 0 || digit > 9) {
       throw new IllegalArgumentException("Digit must be between 0 and 9");
     }
@@ -47,7 +48,8 @@ public final class Characters {
    * {@code value}.
    * @throws NullPointerException if {@code array} is {@code null}.
    */
-  public static char[] appendChar(final char[] array, final char value) throws NullPointerException {
+  public static char[] appendChar(final char[] array, final char value)
+      throws NullPointerException {
     final char[] newArray = Arrays.copyOf(array, array.length + 1);
 
     newArray[array.length] = value;

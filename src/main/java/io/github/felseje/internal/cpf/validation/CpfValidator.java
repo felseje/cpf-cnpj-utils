@@ -37,11 +37,11 @@ public final class CpfValidator {
   /**
    * Prevents instantiation of this class.
    *
-   * @throws IllegalAccessException always thrown to indicate this class should not be
-   *                                instantiated.
+   * @throws UnsupportedOperationException always thrown to indicate this class should not be
+   *                                       instantiated.
    */
-  private CpfValidator() throws IllegalAccessException {
-    throw new IllegalAccessException(NOT_ALLOWED_INSTANTIATION_ERROR);
+  private CpfValidator() {
+    throw new UnsupportedOperationException(NOT_ALLOWED_INSTANTIATION_ERROR);
   }
 
   /**
@@ -55,27 +55,27 @@ public final class CpfValidator {
    *   <li>contain valid check digits.</li>
    * </ul>
    *
-   * @param normalizedCpf the normalized CPF containing only numeric digits
+   * @param cpf the normalized CPF containing only numeric digits
    * @throws IllegalArgumentException if the CPF is null or blank
    * @throws InvalidCpfException      if the CPF is structurally or mathematically invalid
    */
-  public static void validate(String normalizedCpf)
+  public static void validate(final String cpf)
       throws IllegalArgumentException, InvalidCpfException {
-    StringUtils.requireNotBlank(normalizedCpf, NULL_OR_BLANK_CPF_ERROR);
+    StringUtils.requireNotBlank(cpf, NULL_OR_BLANK_CPF_ERROR);
 
-    if (normalizedCpf.length() != CPF_LENGTH) {
+    if (cpf.length() != CPF_LENGTH) {
       throw new InvalidCpfException("CPF must contain exactly %d digits".formatted(CPF_LENGTH));
     }
 
-    if (normalizedCpf.chars().distinct().count() == 1) {
+    if (cpf.chars().distinct().count() == 1) {
       throw new InvalidCpfException("CPF cannot contain all identical digits");
     }
 
-    final int[] base = Integers.toDigitArray(normalizedCpf.substring(0, (CPF_LENGTH - 2)));
+    final int[] base = Integers.toDigitArray(cpf.substring(0, (CPF_LENGTH - 2)));
     final int[] calculatedCheckDigits = CpfCheckDigitCalculator.calculateCheckDigits(base);
 
-    final int firstCheckDigit = Integers.charToDigit(normalizedCpf.charAt(CPF_LENGTH - 2));
-    final int secondCheckDigit = Integers.charToDigit(normalizedCpf.charAt(CPF_LENGTH - 1));
+    final int firstCheckDigit = Integers.charToDigit(cpf.charAt(CPF_LENGTH - 2));
+    final int secondCheckDigit = Integers.charToDigit(cpf.charAt(CPF_LENGTH - 1));
 
     final boolean isValid = calculatedCheckDigits[0] == firstCheckDigit
         && calculatedCheckDigits[1] == secondCheckDigit;

@@ -4,21 +4,25 @@ import static io.github.felseje.internal.Constants.CPF_LENGTH;
 import static io.github.felseje.internal.Constants.NOT_ALLOWED_INSTANTIATION_ERROR;
 import static io.github.felseje.internal.Constants.NULL_OR_BLANK_CPF_ERROR;
 
-import io.github.felseje.internal.core.Normalizer;
 import io.github.felseje.internal.util.StringUtils;
 
 /**
- * Formatter implementation for formatting CPF (Cadastro de Pessoas Físicas) strings.
+ * Utility class responsible for formatting CPF (Cadastro de Pessoas Físicas) strings.
  *
- * <p> This class formats a raw CPF string into the standard Brazilian CPF format:
- * <code>XXX.XXX.XXX-XX</code>. </p>
- * <p> It relies on the {@link Normalizer} to normalize the input before formatting. </p>
- * <p>
- * Example usage:
+ * <p>This class provides a method to convert a normalized CPF (a sequence of exactly
+ * 11 numeric digits) into the standard Brazilian display format:
+ * <code>XXX.XXX.XXX-XX</code>.</p>
+ *
+ * <p>The input must already be normalized, meaning it must contain only digits and
+ * have a length of 11 characters. This class does not perform sanitization (e.g., removal of dots
+ * or dashes).</p>
+ *
+ * <p><strong>Example:</strong></p>
  * <pre>{@code
- *     CpfFormatter formatter = new CpfFormatter();
- *     String formattedCpf = formatter.format("01234567890");  // returns "012.345.678-90"
+ * String formattedCpf = CpfFormatter.format("01234567890"); // returns "012.345.678-90"
  * }</pre>
+ *
+ * <p>This is a utility class and must not be instantiated.</p>
  *
  * @author felseje
  * @since 1.0.0-alpha
@@ -26,12 +30,13 @@ import io.github.felseje.internal.util.StringUtils;
 public final class CpfFormatter {
 
   /**
-   * Creates a new instance of {@code CpfFormatter}.
+   * Prevents instantiation of this class.
    *
-   * @throws IllegalArgumentException if the parameter normalizer is null.
+   * @throws UnsupportedOperationException always thrown to indicate this class should not be
+   *                                       instantiated.
    */
-  private CpfFormatter() throws IllegalAccessException {
-    throw new IllegalAccessException(NOT_ALLOWED_INSTANTIATION_ERROR);
+  private CpfFormatter() {
+    throw new UnsupportedOperationException(NOT_ALLOWED_INSTANTIATION_ERROR);
   }
 
   /**

@@ -1,6 +1,7 @@
 package io.github.felseje.internal.cpf.generation;
 
 import static io.github.felseje.internal.Constants.CPF_LENGTH;
+import static io.github.felseje.internal.Constants.NOT_ALLOWED_INSTANTIATION_ERROR;
 import static io.github.felseje.internal.cpf.util.CpfCheckDigitCalculator.calculateCheckDigits;
 
 import io.github.felseje.internal.cpf.util.Integers;
@@ -25,9 +26,13 @@ import java.util.concurrent.ThreadLocalRandom;
 public final class CpfGenerator {
 
   /**
-   * Constructs a new {@code CpfGenerator}.
+   * Prevents instantiation of this class.
+   *
+   * @throws UnsupportedOperationException always thrown to indicate this class should not be
+   *                                       instantiated.
    */
-  public CpfGenerator() {
+  private CpfGenerator() {
+    throw new UnsupportedOperationException(NOT_ALLOWED_INSTANTIATION_ERROR);
   }
 
   /**
@@ -35,7 +40,7 @@ public final class CpfGenerator {
    *
    * @return an array of 9 random digits between 0 and 9
    */
-  private int[] generateBase() {
+  private static int[] generateBase() {
     final int baseSize = CPF_LENGTH - 2;
     final var base = new int[baseSize];
     final var random = ThreadLocalRandom.current();
@@ -52,7 +57,7 @@ public final class CpfGenerator {
    *
    * @return an unformatted CPF string with 11 digits.
    */
-  public String generate() {
+  public static String generate() {
     final var base = generateBase();
     final var checkDigits = calculateCheckDigits(base);
 

@@ -1,6 +1,7 @@
 package io.github.felseje.internal.cnpj.generation;
 
 import static io.github.felseje.cnpj.CnpjType.NUMERIC;
+import static io.github.felseje.internal.Constants.NOT_ALLOWED_INSTANTIATION_ERROR;
 import static io.github.felseje.internal.cnpj.util.CnpjCheckDigitCalculator.calculateCheckDigits;
 
 import io.github.felseje.cnpj.CnpjType;
@@ -18,10 +19,13 @@ import io.github.felseje.cnpj.CnpjType;
 public final class NumericCnpjGenerator extends AbstractCnpjGenerator {
 
   /**
-   * Constructs a new {@code NumericGenerator}.
+   * Prevents instantiation of this class.
+   *
+   * @throws UnsupportedOperationException always thrown to indicate this class should not be
+   *                                       instantiated.
    */
-  public NumericCnpjGenerator() {
-    super();
+  private NumericCnpjGenerator() {
+    throw new UnsupportedOperationException(NOT_ALLOWED_INSTANTIATION_ERROR);
   }
 
   /**
@@ -30,13 +34,13 @@ public final class NumericCnpjGenerator extends AbstractCnpjGenerator {
    * The method:
    * <ol>
    *     <li>Generates a 12-digit numeric base;</li>
-   *     <li>Calculates check digits according to {@link CnpjType#NUMERIC};</li>
+   *     <li>Calculates the check digits according to {@link CnpjType#NUMERIC};</li>
    *     <li>Returns the full CNPJ (base + check digits) unformatted.</li>
    * </ol>
    *
    * @return an unformatted numeric CNPJ string.
    */
-  public String generate() {
+  public static String generate() {
     final char[] base = generateBase("0123456789");
     final char[] checkDigits = calculateCheckDigits(base, NUMERIC);
 

@@ -41,11 +41,11 @@ public final class CnpjNormalizer {
   /**
    * Prevents instantiation of this class.
    *
-   * @throws IllegalAccessException always thrown to indicate this class should not be
-   *                                instantiated.
+   * @throws UnsupportedOperationException always thrown to indicate this class should not be
+   *                                       instantiated.
    */
-  private CnpjNormalizer() throws IllegalAccessException {
-    throw new IllegalAccessException(NOT_ALLOWED_INSTANTIATION_ERROR);
+  private CnpjNormalizer() {
+    throw new UnsupportedOperationException(NOT_ALLOWED_INSTANTIATION_ERROR);
   }
 
   /**

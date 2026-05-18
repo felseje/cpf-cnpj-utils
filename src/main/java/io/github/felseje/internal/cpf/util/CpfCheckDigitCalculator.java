@@ -30,12 +30,13 @@ public final class CpfCheckDigitCalculator {
   private static final Pattern WRONG_CPF_BASE = Pattern.compile("[^0-9]");
 
   /**
-   * Prevents instantiation of this utility class.
+   * Prevents instantiation of this class.
    *
-   * @throws IllegalStateException always thrown to indicate this class should not be instantiated
+   * @throws UnsupportedOperationException always thrown to indicate this class should not be
+   *                                       instantiated.
    */
   private CpfCheckDigitCalculator() {
-    throw new IllegalStateException(NOT_ALLOWED_INSTANTIATION_ERROR);
+    throw new UnsupportedOperationException(NOT_ALLOWED_INSTANTIATION_ERROR);
   }
 
   /**
@@ -65,7 +66,7 @@ public final class CpfCheckDigitCalculator {
    * @throws InvalidCpfBaseException if the base is {@code null}, malformed, or contains non-digit
    *                                 characters
    */
-  public static int[] calculateCheckDigits(int[] base) throws InvalidCpfBaseException {
+  public static int[] calculateCheckDigits(final int[] base) throws InvalidCpfBaseException {
     if (base == null || WRONG_CPF_BASE.matcher(Integers.toString(base)).matches()) {
       throw new InvalidCpfBaseException("CPF base informed is invalid");
     }
