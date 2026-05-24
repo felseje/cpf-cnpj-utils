@@ -6,7 +6,6 @@ import static io.github.felseje.internal.util.StringUtils.requireNotBlank;
 
 import io.github.felseje.cnpj.CnpjType;
 import io.github.felseje.cnpj.exception.InvalidCnpjException;
-import io.github.felseje.internal.util.StringUtils;
 import java.util.function.Predicate;
 
 /**
